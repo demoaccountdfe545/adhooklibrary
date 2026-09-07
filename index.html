@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AdCraft AI | Meta Ads Creative Vault</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#15171c;--muted:#686d78;--line:#e5e7ec;--accent:#6c4cff;--accent2:#8b5cf6;--shadow:0 12px 35px rgba(20,20,40,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.container{max-width:1180px;margin:auto;padding:0 22px}.hidden{display:none!important}
+.topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;position:sticky;top:0;z-index:20}
+.nav{display:flex;align-items:center;justify-content:space-between;width:100%}.brand{font-weight:900;font-size:20px;letter-spacing:-.5px}.brand span{color:var(--accent)}
+.nav small{color:var(--muted)}
+.hero{padding:70px 0 45px;text-align:center}.eyebrow{display:inline-block;background:#eeeaff;color:#5a3de0;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:800}.hero h1{font-size:52px;line-height:1.03;letter-spacing:-2.8px;max-width:850px;margin:18px auto 16px}.hero p{max-width:680px;margin:auto;color:var(--muted);font-size:18px;line-height:1.6}
+.form-card{max-width:900px;margin:20px auto 70px;background:#fff;border:1px solid var(--line);border-radius:24px;padding:30px;box-shadow:var(--shadow)}.form-card h2{margin:0 0 6px}.form-card>p{margin:0 0 24px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:750}.field input,.field textarea,.field select{border:1px solid #dfe1e8;border-radius:12px;padding:12px 13px;outline:none;background:#fff}.field textarea{min-height:82px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px #6c4cff18}
+.row{display:flex;gap:10px;align-items:center}.btn{border:0;border-radius:12px;padding:12px 17px;font-weight:800}.primary{background:var(--accent);color:#fff}.secondary{background:#f0efff;color:#5438d5}.ghost{background:#fff;border:1px solid var(--line);color:#333}.fullbtn{width:100%;margin-top:20px;padding:15px}
+.dashboard{padding:32px 0 80px}.dash-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:25px}.dash-head h1{margin:0;font-size:34px;letter-spacing:-1.3px}.dash-head p{color:var(--muted);margin:7px 0 0}.controls{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-bottom:24px}.search{width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;outline:0}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:750}.chip.active{background:#16171b;color:#fff;border-color:#16171b}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:21px;transition:.2s}.card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}.tag{font-size:11px;font-weight:850;color:#5a3de0;text-transform:uppercase;letter-spacing:.5px}.card h3{margin:8px 0 8px;font-size:19px}.card p{margin:0;color:var(--muted);line-height:1.55;font-size:14px}.meta{margin:13px 0;color:#777;font-size:12px}.card-actions{display:flex;gap:8px;margin-top:16px}.card-actions .btn{flex:1}
+.modal{position:fixed;inset:0;background:rgba(10,10,20,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}.modal-box{background:#fff;max-width:780px;width:100%;max-height:90vh;overflow:auto;border-radius:22px;padding:25px}.modal-head{display:flex;justify-content:space-between;gap:15px}.modal-head h2{margin:0}.close{border:0;background:#f1f1f3;border-radius:50%;width:34px;height:34px}.promptbox{background:#f6f6f8;border:1px solid #e5e5e9;border-radius:14px;padding:16px;white-space:pre-wrap;line-height:1.55;font-size:13px;margin:15px 0}.copyrow{display:flex;gap:8px}.copyrow button{flex:1}
+.note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:13px}.footer{padding:30px 0 60px;text-align:center;color:#888;font-size:12px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#17181c;color:#fff;padding:11px 15px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:100}.toast.show{opacity:1}
+@media(max-width:760px){.hero h1{font-size:39px}.grid,.cards{grid-template-columns:1fr}.dash-head{align-items:start;flex-direction:column}.form-card{padding:20px}.topbar{height:62px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+ <div class="container nav"><div class="brand">AdCraft<span>AI</span></div><small>Meta Ads Creative Vault</small></div>
+</header>
+
+<section id="setup">
+ <div class="container">
+  <div class="hero">
+   <span class="eyebrow">120+ CREATIVE ANGLES</span>
+   <h1>Turn one product photo into endless ad ideas.</h1>
+   <p>Tell us about your product once. Your details stay in this browser and are automatically used to personalize every creative prompt.</p>
+  </div>
+  <div class="form-card">
+   <h2>Create your product profile</h2>
+   <p>Fill this once. You can edit it later.</p>
+   <div class="grid">
+    <div class="field"><label>Product name *</label><input id="productName" placeholder="e.g. GlowSkin Vitamin C Serum"></div>
+    <div class="field"><label>Target audience *</label><input id="audience" placeholder="e.g. Women 25–40 interested in skincare"></div>
+    <div class="field full"><label>What does your product do?</label><textarea id="description" placeholder="Short description of the product"></textarea></div>
+    <div class="field"><label>Main benefit *</label><input id="benefit" placeholder="e.g. Easy daily skincare"></div>
+    <div class="field"><label>Key feature</label><input id="feature" placeholder="e.g. Lightweight, fast-absorbing formula"></div>
+    <div class="field"><label>Price</label><input id="price" placeholder="e.g. ₹699"></div>
+    <div class="field"><label>Offer</label><input id="offer" placeholder="e.g. 20% off + free shipping"></div>
+    <div class="field"><label>Brand style</label><select id="style"><option>Premium</option><option>Minimal</option><option>Bold</option><option>Playful</option><option>Natural</option><option>Luxury</option></select></div>
+    <div class="field"><label>CTA</label><input id="cta" value="Shop Now"></div>
+   </div>
+   <button class="btn primary fullbtn" onclick="saveProfile()">Build My Creative Library →</button>
+   <p class="note">Privacy: this standalone app uses your browser's localStorage. No server or database is required for the profile data.</p>
+  </div>
+ </div>
+</section>
+
+<section id="dashboard" class="hidden">
+ <div class="container dashboard">
+  <div class="dash-head">
+   <div><h1>Your Creative Library</h1><p id="profileSummary"></p></div>
+   <div class="row"><button class="btn ghost" onclick="editProfile()">Edit profile</button></div>
+  </div>
+  <div class="controls">
+   <input class="search" id="search" placeholder="🔎 Search creative ideas, angles or categories..." oninput="renderCards()">
+   <div class="chips" id="chips"></div>
+  </div>
+  <div class="cards" id="cards"></div>
+  <div class="footer">Your product profile is stored locally in this browser. Prompts are generated on-device from the creative library.</div>
+ </div>
+</section>
+
+<div id="modal" class="modal hidden" onclick="if(event.target===this)closeModal()">
+ <div class="modal-box">
+  <div class="modal-head"><div><div class="tag" id="mcat"></div><h2 id="mtitle"></h2></div><button class="close" onclick="closeModal()">×</button></div>
+  <p id="mdesc" class="note"></p>
+  <div class="promptbox" id="mprompt"></div>
+  <div class="copyrow"><button class="btn primary" onclick="copyCurrent()">Copy Prompt</button><button class="btn secondary" onclick="copyPrompt(currentPrompt())">Copy Again</button></div>
+  <p class="note">Tip: upload your product image into your preferred image-capable AI tool, then paste this prompt. Always verify prices, claims, testimonials and product details before publishing.</p>
+ </div>
+</div>
+<div id="toast" class="toast">Copied to clipboard</div>
+
+<script>
+const LIBRARY = [{"category": "Hooks", "title": "The Curiosity Gap", "desc": "Make the viewer curious without revealing everything.", "goal": "Stop the scroll and earn attention in the first second."}, {"category": "Hooks", "title": "The Pattern Interrupt", "desc": "Create a visual or headline that breaks the usual category pattern.", "goal": "Stop the scroll and earn attention in the first second."}, {"category": "Hooks", "title": "The Bold Claim", "desc": "Lead with the strongest defensible benefit of the product.", "goal": "Stop the scroll and earn attention in the first second."}, {"category": "Hooks", "title": "The Question Hook", "desc": "Open with a question the target customer immediately relates to.", "goal": "Stop the scroll and earn attention in the first second."}, {"category": "Hooks", "title": "The Stop-Scrolling Command", "desc": "Use a short command that makes the viewer pause.", "goal": "Stop the scroll and earn attention in the first second."}, {"category": "Hooks", "title": "The Unexpected Use", "desc": "Show a surprising but genuine use case for the product.", "goal": "Stop the scroll and earn attention in the first second."}, {"category": "Hooks", "title": "The One-Second Test", "desc": "Make the product understandable almost instantly.", "goal": "Stop the scroll and earn attention in the first second."}, {"category": "Hooks", "title": "The Specific Result", "desc": "Lead with a concrete, believable outcome rather than a vague benefit.", "goal": "Stop the scroll and earn attention in the first second."}, {"category": "Hooks", "title": "The Nobody Tells You Hook", "desc": "Frame a useful insight customers often discover late.", "goal": "Stop the scroll and earn attention in the first second."}, {"category": "Hooks", "title": "The Contrarian Hook", "desc": "Challenge a common category assumption while staying truthful.", "goal": "Stop the scroll and earn attention in the first second."}, {"category": "Problem-Based Ads", "title": "Pain Point Spotlight", "desc": "Visualize the frustrating problem the product is designed to solve.", "goal": "Make the customer recognize a problem they already experience."}, {"category": "Problem-Based Ads", "title": "Daily Frustration", "desc": "Show a familiar everyday moment where the problem appears.", "goal": "Make the customer recognize a problem they already experience."}, {"category": "Problem-Based Ads", "title": "Old Way vs Better Way", "desc": "Contrast the customer's current workaround with using the product.", "goal": "Make the customer recognize a problem they already experience."}, {"category": "Problem-Based Ads", "title": "Hidden Problem", "desc": "Reveal a less obvious problem related to the customer's situation.", "goal": "Make the customer recognize a problem they already experience."}, {"category": "Problem-Based Ads", "title": "Time-Wasting Problem", "desc": "Show how the problem consumes unnecessary time.", "goal": "Make the customer recognize a problem they already experience."}, {"category": "Problem-Based Ads", "title": "Money-Wasting Problem", "desc": "Show a legitimate way the problem can create avoidable cost.", "goal": "Make the customer recognize a problem they already experience."}, {"category": "Problem-Based Ads", "title": "Mess / Clutter Problem", "desc": "For relevant products, visualize the before-state as cluttered or inconvenient.", "goal": "Make the customer recognize a problem they already experience."}, {"category": "Problem-Based Ads", "title": "Confidence Problem", "desc": "Show the emotional frustration that can come from the problem.", "goal": "Make the customer recognize a problem they already experience."}, {"category": "Problem-Based Ads", "title": "Convenience Problem", "desc": "Focus on the effort customers currently have to make.", "goal": "Make the customer recognize a problem they already experience."}, {"category": "Problem-Based Ads", "title": "Problem Checklist", "desc": "Show 3\u20135 recognizable signs that the customer has the problem.", "goal": "Make the customer recognize a problem they already experience."}, {"category": "Offer Ads", "title": "Hero Offer", "desc": "Make the product and current offer the main visual focus.", "goal": "Make the value proposition and genuine offer immediately clear."}, {"category": "Offer Ads", "title": "Price Reveal", "desc": "Build the visual around a clear, truthful price or discount.", "goal": "Make the value proposition and genuine offer immediately clear."}, {"category": "Offer Ads", "title": "Bundle Builder", "desc": "Show multiple included products or benefits as one bundle.", "goal": "Make the value proposition and genuine offer immediately clear."}, {"category": "Offer Ads", "title": "Limited-Time Offer", "desc": "Create urgency around a genuine deadline.", "goal": "Make the value proposition and genuine offer immediately clear."}, {"category": "Offer Ads", "title": "Free Shipping", "desc": "Make the shipping benefit visually prominent when applicable.", "goal": "Make the value proposition and genuine offer immediately clear."}, {"category": "Offer Ads", "title": "Buy More Save More", "desc": "Visualize quantity-based savings when the offer exists.", "goal": "Make the value proposition and genuine offer immediately clear."}, {"category": "Offer Ads", "title": "Bonus Product", "desc": "Highlight a genuine bonus item included with purchase.", "goal": "Make the value proposition and genuine offer immediately clear."}, {"category": "Offer Ads", "title": "Value Stack", "desc": "Stack the product, benefits, bonuses and savings visually.", "goal": "Make the value proposition and genuine offer immediately clear."}, {"category": "Offer Ads", "title": "Best Seller Offer", "desc": "Combine social proof with the current offer.", "goal": "Make the value proposition and genuine offer immediately clear."}, {"category": "Offer Ads", "title": "Simple Offer Card", "desc": "Create a clean direct-response ad with product, offer and CTA.", "goal": "Make the value proposition and genuine offer immediately clear."}, {"category": "Before / After", "title": "Visual Transformation", "desc": "Show a clear before-and-after state when the product genuinely creates a visible change.", "goal": "Communicate a truthful transformation or improvement visually."}, {"category": "Before / After", "title": "Experience Transformation", "desc": "Contrast the customer's experience before and after using the product.", "goal": "Communicate a truthful transformation or improvement visually."}, {"category": "Before / After", "title": "Routine Transformation", "desc": "Show how a routine becomes easier after adopting the product.", "goal": "Communicate a truthful transformation or improvement visually."}, {"category": "Before / After", "title": "Workspace Transformation", "desc": "For relevant products, show the environment before and after.", "goal": "Communicate a truthful transformation or improvement visually."}, {"category": "Before / After", "title": "Organization Transformation", "desc": "Show cluttered versus organized results where truthful.", "goal": "Communicate a truthful transformation or improvement visually."}, {"category": "Before / After", "title": "Time Transformation", "desc": "Show the old time-consuming process versus the simpler process.", "goal": "Communicate a truthful transformation or improvement visually."}, {"category": "Before / After", "title": "Style Transformation", "desc": "For fashion, beauty or home products, show a tasteful visual transformation.", "goal": "Communicate a truthful transformation or improvement visually."}, {"category": "Before / After", "title": "Confidence Transformation", "desc": "Show the emotional difference without exaggerated claims.", "goal": "Communicate a truthful transformation or improvement visually."}, {"category": "Before / After", "title": "Three-Step Before/After", "desc": "Present before \u2192 product \u2192 after as a simple story.", "goal": "Communicate a truthful transformation or improvement visually."}, {"category": "Before / After", "title": "Split-Screen Transformation", "desc": "Use a strong split-screen composition with product continuity.", "goal": "Communicate a truthful transformation or improvement visually."}, {"category": "Testimonials", "title": "Customer Quote", "desc": "Turn a genuine customer quote into a clean visual testimonial.", "goal": "Build trust using only authentic customer proof supplied by the advertiser."}, {"category": "Testimonials", "title": "Review Screenshot Style", "desc": "Create a realistic testimonial layout inspired by a genuine review, without inventing reviews.", "goal": "Build trust using only authentic customer proof supplied by the advertiser."}, {"category": "Testimonials", "title": "One-Sentence Proof", "desc": "Make one authentic customer result the headline.", "goal": "Build trust using only authentic customer proof supplied by the advertiser."}, {"category": "Testimonials", "title": "Multiple Reviews", "desc": "Combine several short genuine reviews into a social-proof creative.", "goal": "Build trust using only authentic customer proof supplied by the advertiser."}, {"category": "Testimonials", "title": "Star Rating Focus", "desc": "Use a real rating only if supplied by the advertiser.", "goal": "Build trust using only authentic customer proof supplied by the advertiser."}, {"category": "Testimonials", "title": "Customer Story", "desc": "Turn a real customer experience into a visual mini-story.", "goal": "Build trust using only authentic customer proof supplied by the advertiser."}, {"category": "Testimonials", "title": "Objection + Testimonial", "desc": "Pair a common objection with an authentic customer response.", "goal": "Build trust using only authentic customer proof supplied by the advertiser."}, {"category": "Testimonials", "title": "Product + Review", "desc": "Place the product beside a concise genuine review.", "goal": "Build trust using only authentic customer proof supplied by the advertiser."}, {"category": "Testimonials", "title": "UGC Testimonial Card", "desc": "Create a creator-style testimonial layout using supplied customer content.", "goal": "Build trust using only authentic customer proof supplied by the advertiser."}, {"category": "Testimonials", "title": "Proof Wall", "desc": "Create a collage-style ad from multiple genuine customer comments.", "goal": "Build trust using only authentic customer proof supplied by the advertiser."}, {"category": "UGC Ads", "title": "Selfie Review", "desc": "Create a natural selfie-style creator ad around the supplied product.", "goal": "Make the creative feel native, human and creator-led."}, {"category": "UGC Ads", "title": "Unboxing", "desc": "Show a believable unboxing sequence without inventing product features.", "goal": "Make the creative feel native, human and creator-led."}, {"category": "UGC Ads", "title": "First Impression", "desc": "Capture the creator's first reaction after seeing or trying the product.", "goal": "Make the creative feel native, human and creator-led."}, {"category": "UGC Ads", "title": "Day-in-the-Life", "desc": "Place the product naturally inside a creator's daily routine.", "goal": "Make the creative feel native, human and creator-led."}, {"category": "UGC Ads", "title": "Problem \u2192 Product", "desc": "Open with the creator describing a real problem, then introduce the product.", "goal": "Make the creative feel native, human and creator-led."}, {"category": "UGC Ads", "title": "3 Reasons", "desc": "Have a creator explain three genuine reasons they like the product.", "goal": "Make the creative feel native, human and creator-led."}, {"category": "UGC Ads", "title": "POV Ad", "desc": "Create a first-person POV concept relevant to the product.", "goal": "Make the creative feel native, human and creator-led."}, {"category": "UGC Ads", "title": "Casual Recommendation", "desc": "Make the ad feel like a friend recommending a product.", "goal": "Make the creative feel native, human and creator-led."}, {"category": "UGC Ads", "title": "Comment Reply", "desc": "Design a creator response to a common customer question.", "goal": "Make the creative feel native, human and creator-led."}, {"category": "UGC Ads", "title": "Phone Camera Raw", "desc": "Use an intentionally less-polished native-social style while keeping the product accurate.", "goal": "Make the creative feel native, human and creator-led."}, {"category": "Founder Ads", "title": "Founder Introduction", "desc": "Show the founder introducing why the product exists.", "goal": "Build connection and trust through the brand's real founder story."}, {"category": "Founder Ads", "title": "Why We Made It", "desc": "Tell the origin story in a concise ad.", "goal": "Build connection and trust through the brand's real founder story."}, {"category": "Founder Ads", "title": "Founder Problem Story", "desc": "Connect the founder's genuine experience to the customer problem.", "goal": "Build connection and trust through the brand's real founder story."}, {"category": "Founder Ads", "title": "Behind the Product", "desc": "Show the product-making or development story.", "goal": "Build connection and trust through the brand's real founder story."}, {"category": "Founder Ads", "title": "Founder Pick", "desc": "Have the founder explain their favorite feature or use case.", "goal": "Build connection and trust through the brand's real founder story."}, {"category": "Founder Ads", "title": "Mission Ad", "desc": "Communicate the real brand mission through a human visual.", "goal": "Build connection and trust through the brand's real founder story."}, {"category": "Founder Ads", "title": "Quality Promise", "desc": "Show what the brand genuinely prioritizes in product quality.", "goal": "Build connection and trust through the brand's real founder story."}, {"category": "Founder Ads", "title": "Founder FAQ", "desc": "Answer one frequent customer question in a founder-led creative.", "goal": "Build connection and trust through the brand's real founder story."}, {"category": "Founder Ads", "title": "Founder Thank You", "desc": "Create a customer-appreciation ad that also presents the product.", "goal": "Build connection and trust through the brand's real founder story."}, {"category": "Founder Ads", "title": "Small Brand Story", "desc": "Position the brand as human and personal without attacking larger competitors.", "goal": "Build connection and trust through the brand's real founder story."}, {"category": "Comparison Ads", "title": "Feature Comparison", "desc": "Compare your product with a relevant alternative on meaningful features.", "goal": "Help the customer understand a meaningful difference or choice."}, {"category": "Comparison Ads", "title": "Old Way vs New Way", "desc": "Compare a conventional process with the product's approach.", "goal": "Help the customer understand a meaningful difference or choice."}, {"category": "Comparison Ads", "title": "Budget vs Premium", "desc": "Show what changes between lower-cost and premium options without misleading claims.", "goal": "Help the customer understand a meaningful difference or choice."}, {"category": "Comparison Ads", "title": "Size Comparison", "desc": "Use familiar objects or dimensions to communicate product size.", "goal": "Help the customer understand a meaningful difference or choice."}, {"category": "Comparison Ads", "title": "Material Comparison", "desc": "Show real material differences when documented.", "goal": "Help the customer understand a meaningful difference or choice."}, {"category": "Comparison Ads", "title": "Time Comparison", "desc": "Compare the time required for two legitimate approaches.", "goal": "Help the customer understand a meaningful difference or choice."}, {"category": "Comparison Ads", "title": "Convenience Comparison", "desc": "Show the steps involved in each option.", "goal": "Help the customer understand a meaningful difference or choice."}, {"category": "Comparison Ads", "title": "Use-Case Comparison", "desc": "Help different customer types choose the right product option.", "goal": "Help the customer understand a meaningful difference or choice."}, {"category": "Comparison Ads", "title": "Good / Better / Best", "desc": "Compare product variants when multiple versions exist.", "goal": "Help the customer understand a meaningful difference or choice."}, {"category": "Comparison Ads", "title": "Myth vs Reality", "desc": "Compare a common category assumption with factual product information.", "goal": "Help the customer understand a meaningful difference or choice."}, {"category": "Educational Ads", "title": "How It Works", "desc": "Explain the product mechanism simply and visually.", "goal": "Teach something useful while naturally introducing the product."}, {"category": "Educational Ads", "title": "3 Benefits", "desc": "Teach three genuine benefits using the product as the visual anchor.", "goal": "Teach something useful while naturally introducing the product."}, {"category": "Educational Ads", "title": "How to Use", "desc": "Show the correct usage process step by step.", "goal": "Teach something useful while naturally introducing the product."}, {"category": "Educational Ads", "title": "Buying Guide", "desc": "Teach customers what to look for when choosing a product in the category.", "goal": "Teach something useful while naturally introducing the product."}, {"category": "Educational Ads", "title": "Mistakes to Avoid", "desc": "Highlight common mistakes the product can help prevent when truthful.", "goal": "Teach something useful while naturally introducing the product."}, {"category": "Educational Ads", "title": "Feature Explained", "desc": "Take one technical or confusing feature and make it easy to understand.", "goal": "Teach something useful while naturally introducing the product."}, {"category": "Educational Ads", "title": "FAQ Ad", "desc": "Answer one common customer question visually.", "goal": "Teach something useful while naturally introducing the product."}, {"category": "Educational Ads", "title": "Size / Fit Guide", "desc": "Create a visual guide for choosing the correct size or variant.", "goal": "Teach something useful while naturally introducing the product."}, {"category": "Educational Ads", "title": "Ingredient / Material Story", "desc": "Explain relevant ingredients or materials accurately.", "goal": "Teach something useful while naturally introducing the product."}, {"category": "Educational Ads", "title": "Care / Maintenance", "desc": "Teach customers how to care for or maintain the product.", "goal": "Teach something useful while naturally introducing the product."}, {"category": "Retargeting Creatives", "title": "You Saw It", "desc": "Create a reminder ad for people who previously viewed the product.", "goal": "Reassure warm prospects and address why they may not have purchased."}, {"category": "Retargeting Creatives", "title": "Still Thinking?", "desc": "Use a gentle reminder for warm audiences without aggressive pressure.", "goal": "Reassure warm prospects and address why they may not have purchased."}, {"category": "Retargeting Creatives", "title": "Objection Killer", "desc": "Address one common purchase objection.", "goal": "Reassure warm prospects and address why they may not have purchased."}, {"category": "Retargeting Creatives", "title": "Review Reminder", "desc": "Use genuine reviews to reassure visitors who have not purchased.", "goal": "Reassure warm prospects and address why they may not have purchased."}, {"category": "Retargeting Creatives", "title": "Benefit Reminder", "desc": "Bring the top three benefits back to a warm audience.", "goal": "Reassure warm prospects and address why they may not have purchased."}, {"category": "Retargeting Creatives", "title": "Offer Reminder", "desc": "Remind warm visitors of a current, genuine offer.", "goal": "Reassure warm prospects and address why they may not have purchased."}, {"category": "Retargeting Creatives", "title": "Product Close-Up", "desc": "Use a premium close-up to reintroduce the product.", "goal": "Reassure warm prospects and address why they may not have purchased."}, {"category": "Retargeting Creatives", "title": "FAQ Retargeting", "desc": "Answer the question most likely preventing purchase.", "goal": "Reassure warm prospects and address why they may not have purchased."}, {"category": "Retargeting Creatives", "title": "Social Proof Retargeting", "desc": "Use authentic customer proof to reinforce confidence.", "goal": "Reassure warm prospects and address why they may not have purchased."}, {"category": "Retargeting Creatives", "title": "Last Step", "desc": "Create a simple direct-response creative for appropriate warm audiences.", "goal": "Reassure warm prospects and address why they may not have purchased."}];
+let activeCategory="All", currentIndex=null;
+const $=id=>document.getElementById(id);
+
+function getProfile(){try{return JSON.parse(localStorage.getItem("adcraft_profile")||"null")}catch(e){return null}}
+function esc(s){return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+
+function saveProfile(){
+ const p={
+  productName:$("productName").value.trim(),audience:$("audience").value.trim(),description:$("description").value.trim(),
+  benefit:$("benefit").value.trim(),feature:$("feature").value.trim(),price:$("price").value.trim(),offer:$("offer").value.trim(),
+  style:$("style").value,cta:$("cta").value.trim()||"Shop Now"
+ };
+ if(!p.productName||!p.audience||!p.benefit){alert("Please fill Product name, Target audience and Main benefit.");return}
+ localStorage.setItem("adcraft_profile",JSON.stringify(p)); showDashboard();
+}
+function fillProfile(){
+ const p=getProfile(); if(!p)return;
+ ["productName","audience","description","benefit","feature","price","offer","style","cta"].forEach(k=>{if($(k)&&p[k]!=null)$(k).value=p[k]});
+}
+function showDashboard(){
+ $("setup").classList.add("hidden");$("dashboard").classList.remove("hidden");
+ const p=getProfile();$("profileSummary").textContent=`${p.productName} • ${p.audience}`;
+ buildChips();renderCards();
+}
+function editProfile(){fillProfile();$("dashboard").classList.add("hidden");$("setup").classList.remove("hidden");window.scrollTo(0,0)}
+function buildChips(){
+ const el=$("chips");el.innerHTML="";
+ ["All",...Object.keys(LIBRARY.reduce((o,x)=>(o[x.category]=1,o),{}))].forEach(c=>{
+  const b=document.createElement("button");b.className="chip"+(c===activeCategory?" active":"");b.textContent=c;
+  b.onclick=()=>{activeCategory=c;buildChips();renderCards()};el.appendChild(b);
+ });
+}
+function renderCards(){
+ const q=$("search").value.toLowerCase();
+ const list=LIBRARY.filter((x,i)=>(activeCategory==="All"||x.category===activeCategory)&&
+  (!q||`${x.title} ${x.desc} ${x.category}`.toLowerCase().includes(q)));
+ $("cards").innerHTML=list.map(x=>{
+  const i=LIBRARY.indexOf(x);
+  return `<article class="card"><div class="tag">${esc(x.category)}</div><h3>${esc(x.title)}</h3><p>${esc(x.desc)}</p><div class="meta">Goal: ${esc(x.goal)}</div><div class="card-actions"><button class="btn secondary" onclick="openPrompt(${i})">View prompt</button><button class="btn primary" onclick="quickCopy(${i})">Copy prompt</button></div></article>`
+ }).join("") || `<div class="card" style="grid-column:1/-1;text-align:center"><h3>No creatives found</h3><p>Try another search or category.</p></div>`;
+}
+function makePrompt(x){
+ const p=getProfile();
+ return `Create a high-quality Meta (Facebook/Instagram) advertising creative using the uploaded product image as the primary product reference.
+
+PRODUCT DETAILS
+- Product name: ${p.productName}
+- What it does: ${p.description||"Use the product image and supplied details as the reference."}
+- Target customer: ${p.audience}
+- Main benefit: ${p.benefit}
+- Key feature: ${p.feature||"Use only verified product features."}
+- Price: ${p.price||"Not specified"}
+- Offer: ${p.offer||"No specific offer"}
+- Brand style: ${p.style}
+- CTA: ${p.cta}
+
+CREATIVE ANGLE
+${x.title}
+
+CONCEPT
+${x.desc}
+
+GOAL
+${x.goal}
+
+VISUAL DIRECTION
+Use the uploaded product as the exact visual reference. Preserve its real shape, proportions, colors, packaging, logo placement and important details. Do not invent features, accessories, claims, reviews, certifications or results. Build a clear, premium, scroll-stopping composition suitable for a Meta ad. Make the product the visual hero. Use realistic lighting, believable materials and strong visual hierarchy. Leave intentional negative space for copy where needed.
+
+COPY DIRECTION
+Create 1 short primary headline based on the angle, plus a concise supporting line and CTA. Keep copy easy to read on a mobile screen. Use the supplied product facts only. Do not invent testimonials, discounts, guarantees, medical claims or performance results.
+
+FORMAT
+Create a 1:1 square ad unless another format is specified. The result should look like a real performance-marketing creative, not a generic poster.
+
+OUTPUT
+1. Visual concept
+2. Headline
+3. Supporting copy
+4. CTA
+5. Final image-generation prompt
+
+IMPORTANT
+The uploaded product image is the source of truth for the product's appearance. If text rendering inside the generated image is unreliable, keep the visual clean and provide the headline/copy separately so it can be added in Canva or another design tool.`;
+}
+function openPrompt(i){currentIndex=i;const x=LIBRARY[i];$("mcat").textContent=x.category;$("mtitle").textContent=x.title;$("mdesc").textContent=x.desc;$("mprompt").textContent=makePrompt(x);$("modal").classList.remove("hidden")}
+function closeModal(){$("modal").classList.add("hidden")}
+function currentPrompt(){return currentIndex==null?"":makePrompt(LIBRARY[currentIndex])}
+async function copyPrompt(text){try{await navigator.clipboard.writeText(text)}catch(e){const t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove()}toast()}
+function copyCurrent(){copyPrompt(currentPrompt())}
+function quickCopy(i){copyPrompt(makePrompt(LIBRARY[i]))}
+function toast(){const t=$("toast");t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1500)}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+if(getProfile()){fillProfile();showDashboard()}
+</script>
+</body>
+</html>
