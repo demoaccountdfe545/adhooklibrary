@@ -1,0 +1,418 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YouTube Clip Recorder</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #09090b;
+      --panel: #151518;
+      --line: #2b2b31;
+      --text: #f5f5f7;
+      --muted: #a1a1aa;
+      --red: #ff3434;
+      --red-dark: #d91f26;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(255, 52, 52, .13), transparent 34rem),
+        var(--bg);
+    }
+
+    .app { width: min(980px, calc(100% - 32px)); margin: 42px auto; }
+    h1 { margin: 0 0 8px; font-size: clamp(27px, 4vw, 42px); letter-spacing: -.04em; }
+    .intro { margin: 0 0 25px; color: var(--muted); }
+    .panel {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(21, 21, 24, .92);
+      box-shadow: 0 18px 60px rgba(0, 0, 0, .32);
+    }
+    label { display: block; margin: 0 0 8px; color: #d6d6da; font-size: 14px; font-weight: 650; }
+    input {
+      width: 100%;
+      height: 46px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      outline: none;
+      background: #0e0e11;
+      color: var(--text);
+      font: inherit;
+    }
+    input:focus { border-color: #676771; box-shadow: 0 0 0 3px rgba(255,255,255,.05); }
+    .times { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    button, .download {
+      min-height: 44px;
+      padding: 0 17px;
+      border: 0;
+      border-radius: 11px;
+      color: #fff;
+      background: #303036;
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    button.primary { background: var(--red); }
+    button.primary:hover { background: var(--red-dark); }
+    button:disabled { cursor: not-allowed; opacity: .45; }
+    .player-shell {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      margin-top: 20px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: #000;
+    }
+    #player, #player iframe { width: 100%; height: 100%; }
+    .placeholder {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: #686872;
+      pointer-events: none;
+    }
+    .status { min-height: 23px; margin: 16px 0 0; color: var(--muted); font-size: 14px; }
+    .status.error { color: #ff8d8d; }
+    .note { margin: 16px 0 0; color: #81818b; font-size: 13px; line-height: 1.55; }
+    .result { display: none; margin-top: 20px; }
+    .result.ready { display: block; }
+    .result video { width: 100%; max-height: 550px; border-radius: 14px; background: #000; }
+    .result .actions { margin-top: 12px; }
+
+    /* During tab capture, only the video is visible. */
+    body.recording-mode,
+    body.recording-mode * { cursor: none !important; }
+    body.recording-mode { overflow: hidden; background: #000; }
+    body.recording-mode .app > :not(.panel),
+    body.recording-mode .panel > :not(.player-shell) { display: none !important; }
+    body.recording-mode .app,
+    body.recording-mode .panel,
+    body.recording-mode .player-shell {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: #000;
+      box-shadow: none;
+    }
+    body.recording-mode .player-shell { aspect-ratio: auto; pointer-events: none; }
+    body.recording-mode #player,
+    body.recording-mode #player iframe { width: 100vw !important; height: 100vh !important; pointer-events: none !important; }
+    body.recording-mode .placeholder { display: none; }
+
+    @media (max-width: 650px) {
+      .app { margin: 22px auto; }
+      .panel { padding: 16px; }
+      .times { grid-template-columns: 1fr; }
+      button, .download { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1>YouTube Clip Recorder</h1>
+    <p class="intro">Record a selected part of a YouTube video directly in Chrome.</p>
+
+    <section class="panel">
+      <label for="youtubeUrl">YouTube URL</label>
+      <input id="youtubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
+
+      <div class="times">
+        <div>
+          <label for="startTime">Start time</label>
+          <input id="startTime" value="1:25" inputmode="numeric" placeholder="1:25">
+        </div>
+        <div>
+          <label for="endTime">End time</label>
+          <input id="endTime" value="3:22" inputmode="numeric" placeholder="3:22">
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="loadBtn">Load Video</button>
+        <button id="recordBtn" class="primary" disabled>● Record Clip</button>
+      </div>
+
+      <div class="player-shell">
+        <div id="player"></div>
+        <div id="placeholder" class="placeholder">Load a YouTube video to begin</div>
+      </div>
+
+      <p id="status" class="status">Ready.</p>
+      <p class="note">When Chrome asks what to share, choose <strong>This Tab</strong> and enable <strong>Share tab audio</strong>. The app starts playback 2 seconds early, but records only from your exact start time.</p>
+
+      <div id="result" class="result">
+        <video id="preview" controls playsinline></video>
+        <div class="actions">
+          <a id="downloadBtn" class="download" download>Download Clip</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    const PRE_ROLL_SECONDS = 2;
+    const END_TOLERANCE_SECONDS = 0.08;
+
+    const urlInput = document.getElementById('youtubeUrl');
+    const startInput = document.getElementById('startTime');
+    const endInput = document.getElementById('endTime');
+    const loadBtn = document.getElementById('loadBtn');
+    const recordBtn = document.getElementById('recordBtn');
+    const statusEl = document.getElementById('status');
+    const placeholder = document.getElementById('placeholder');
+    const result = document.getElementById('result');
+    const preview = document.getElementById('preview');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let player;
+    let playerReady = false;
+    let loadedVideoId = '';
+    let captureStream;
+    let mediaRecorder;
+    let recordedChunks = [];
+    let timingTimer;
+    let outputUrl;
+    let recordingStarted = false;
+
+    function setStatus(message, isError = false) {
+      statusEl.textContent = message;
+      statusEl.classList.toggle('error', isError);
+    }
+
+    function parseTime(value) {
+      const text = String(value).trim();
+      if (!text) return NaN;
+      if (/^\d+(\.\d+)?$/.test(text)) return Number(text);
+      const parts = text.split(':').map(Number);
+      if (parts.some(Number.isNaN) || parts.length > 3) return NaN;
+      return parts.reduce((total, part) => total * 60 + part, 0);
+    }
+
+    function extractVideoId(value) {
+      const text = value.trim();
+      if (/^[a-zA-Z0-9_-]{11}$/.test(text)) return text;
+      try {
+        const parsed = new URL(text);
+        if (parsed.hostname === 'youtu.be') return parsed.pathname.slice(1).split('/')[0];
+        if (parsed.pathname.startsWith('/shorts/')) return parsed.pathname.split('/')[2];
+        if (parsed.pathname.startsWith('/embed/')) return parsed.pathname.split('/')[2];
+        return parsed.searchParams.get('v') || '';
+      } catch (_) {
+        return '';
+      }
+    }
+
+    function getTimes() {
+      const start = parseTime(startInput.value);
+      const end = parseTime(endInput.value);
+      if (!Number.isFinite(start) || !Number.isFinite(end) || start < 0 || end <= start) {
+        throw new Error('Enter a valid start and end time. The end time must be later than the start time.');
+      }
+      return { start, end };
+    }
+
+    window.onYouTubeIframeAPIReady = function () {
+      player = new YT.Player('player', {
+        width: '100%',
+        height: '100%',
+        videoId: '',
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          iv_load_policy: 3,
+          modestbranding: 1,
+          playsinline: 1,
+          rel: 0,
+          origin: location.origin
+        },
+        events: {
+          onReady: () => {
+            playerReady = true;
+            setStatus('Player ready. Paste a URL and load the video.');
+          },
+          onError: event => setStatus('YouTube could not load this video. Error ' + event.data + '.', true)
+        }
+      });
+    };
+
+    loadBtn.addEventListener('click', () => {
+      try {
+        const videoId = extractVideoId(urlInput.value);
+        if (!videoId) throw new Error('Please enter a valid YouTube URL.');
+        getTimes();
+        if (!playerReady) throw new Error('The YouTube player is still loading. Please try again in a moment.');
+        loadedVideoId = videoId;
+        player.cueVideoById({ videoId, startSeconds: Math.max(0, parseTime(startInput.value) - PRE_ROLL_SECONDS) });
+        placeholder.style.display = 'none';
+        recordBtn.disabled = false;
+        setStatus('Video loaded. Click Record Clip when ready.');
+      } catch (error) {
+        setStatus(error.message, true);
+      }
+    });
+
+    function preferredMimeType() {
+      const choices = [
+        'video/mp4;codecs=h264,aac',
+        'video/webm;codecs=vp9,opus',
+        'video/webm;codecs=vp8,opus',
+        'video/webm'
+      ];
+      return choices.find(type => MediaRecorder.isTypeSupported(type)) || '';
+    }
+
+    async function hideCapturedCursor(stream) {
+      const track = stream.getVideoTracks()[0];
+      if (!track || !track.applyConstraints) return;
+      try {
+        await track.applyConstraints({ cursor: 'never', frameRate: { ideal: 30, max: 60 } });
+      } catch (_) {
+        // Chrome versions that ignore the cursor constraint still use the CSS cursor fallback.
+      }
+    }
+
+    function waitForVideoTime(targetTime) {
+      return new Promise((resolve, reject) => {
+        const startedAt = Date.now();
+        const check = () => {
+          if (!captureStream || !captureStream.active) return reject(new Error('Tab sharing stopped.'));
+          const current = Number(player.getCurrentTime());
+          if (current >= targetTime - 0.03) return resolve();
+          if (Date.now() - startedAt > 15000) return reject(new Error('The video did not reach the start time. Please try again.'));
+          requestAnimationFrame(check);
+        };
+        check();
+      });
+    }
+
+    function startEndWatcher(endTime) {
+      clearInterval(timingTimer);
+      timingTimer = setInterval(() => {
+        if (!recordingStarted || !mediaRecorder || mediaRecorder.state !== 'recording') return;
+        if (player.getCurrentTime() >= endTime - END_TOLERANCE_SECONDS) stopRecording();
+      }, 25);
+    }
+
+    async function beginRecording() {
+      if (!loadedVideoId || !playerReady) return;
+      let times;
+      try {
+        times = getTimes();
+        setStatus('Choose “This Tab” and turn on “Share tab audio”.');
+        captureStream = await navigator.mediaDevices.getDisplayMedia({
+          video: {
+            displaySurface: 'browser',
+            frameRate: { ideal: 30, max: 60 },
+            cursor: 'never'
+          },
+          audio: true,
+          preferCurrentTab: true,
+          selfBrowserSurface: 'include',
+          surfaceSwitching: 'exclude'
+        });
+
+        await hideCapturedCursor(captureStream);
+        document.body.classList.add('recording-mode');
+        recordBtn.disabled = true;
+        result.classList.remove('ready');
+        recordedChunks = [];
+        recordingStarted = false;
+
+        const videoTrack = captureStream.getVideoTracks()[0];
+        videoTrack.addEventListener('ended', () => {
+          if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+          cleanupCapture();
+        }, { once: true });
+
+        const mimeType = preferredMimeType();
+        const options = {
+          videoBitsPerSecond: 12000000,
+          audioBitsPerSecond: 192000
+        };
+        if (mimeType) options.mimeType = mimeType;
+        mediaRecorder = new MediaRecorder(captureStream, options);
+
+        mediaRecorder.addEventListener('dataavailable', event => {
+          if (event.data && event.data.size > 0) recordedChunks.push(event.data);
+        });
+        mediaRecorder.addEventListener('stop', finishRecording, { once: true });
+
+        // Play two seconds early. These frames are intentionally not recorded.
+        const preRollStart = Math.max(0, times.start - PRE_ROLL_SECONDS);
+        player.seekTo(preRollStart, true);
+        player.playVideo();
+        await waitForVideoTime(times.start);
+
+        mediaRecorder.start(250);
+        recordingStarted = true;
+        startEndWatcher(times.end);
+      } catch (error) {
+        cleanupCapture();
+        setStatus(error.name === 'NotAllowedError' ? 'Recording permission was cancelled.' : error.message, true);
+      }
+    }
+
+    function stopRecording() {
+      clearInterval(timingTimer);
+      timingTimer = null;
+      recordingStarted = false;
+      if (playerReady) player.pauseVideo();
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+    }
+
+    function finishRecording() {
+      const type = mediaRecorder && mediaRecorder.mimeType ? mediaRecorder.mimeType : 'video/webm';
+      const blob = new Blob(recordedChunks, { type });
+      if (outputUrl) URL.revokeObjectURL(outputUrl);
+      outputUrl = URL.createObjectURL(blob);
+      preview.src = outputUrl;
+      downloadBtn.href = outputUrl;
+      const extension = type.includes('mp4') ? 'mp4' : 'webm';
+      downloadBtn.download = 'youtube-clip.' + extension;
+      result.classList.add('ready');
+      cleanupCapture();
+      setStatus(blob.size ? 'Clip ready. Preview or download it below.' : 'No video data was recorded. Please try again.', !blob.size);
+    }
+
+    function cleanupCapture() {
+      clearInterval(timingTimer);
+      timingTimer = null;
+      document.body.classList.remove('recording-mode');
+      if (captureStream) captureStream.getTracks().forEach(track => track.stop());
+      captureStream = null;
+      recordingStarted = false;
+      recordBtn.disabled = !loadedVideoId;
+    }
+
+    recordBtn.addEventListener('click', beginRecording);
+  </script>
+</body>
+</html>
