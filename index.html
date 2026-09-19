@@ -244,6 +244,7 @@
         videoId: '',
         playerVars: {
           autoplay: 0,
+          cc_load_policy: 0,
           controls: 0,
           disablekb: 1,
           fs: 0,
@@ -257,6 +258,9 @@
           onReady: () => {
             playerReady = true;
             setStatus('Player ready. Paste a URL and load the video.');
+          },
+          onStateChange: event => {
+            if (event.data === YT.PlayerState.PLAYING) disableCaptions();
           },
           onError: event => setStatus('YouTube could not load this video. Error ' + event.data + '.', true)
         }
@@ -287,6 +291,14 @@
         'video/webm'
       ];
       return choices.find(type => MediaRecorder.isTypeSupported(type)) || '';
+    }
+
+    function disableCaptions() {
+      if (!playerReady || !player) return;
+      try { player.setOption('captions', 'track', {}); } catch (_) {}
+      try { player.setOption('cc', 'track', {}); } catch (_) {}
+      try { if (player.unloadModule) player.unloadModule('captions'); } catch (_) {}
+      try { if (player.unloadModule) player.unloadModule('cc'); } catch (_) {}
     }
 
     async function hideCapturedCursor(stream) {
@@ -369,7 +381,11 @@
         const preRollStart = Math.max(0, times.start - PRE_ROLL_SECONDS);
         player.seekTo(preRollStart, true);
         player.playVideo();
+        disableCaptions();
         await waitForVideoTime(times.start);
+
+        // Recheck immediately before capture because YouTube can restore a saved CC preference.
+        disableCaptions();
 
         mediaRecorder.start(250);
         recordingStarted = true;
